@@ -20,4 +20,29 @@ model User {
   hashedPassword String
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+
+  // relations 
+  api Api[]
+}
+
+enum ApiStatus {
+  active
+  inactive
+  deleted
+  expired
+}
+
+model Api {
+  id            String   @id @default(uuid())
+  user_id       String
+  hashed_secret String
+  full_key      String
+  status        ApiStatus   @default(active)
+  expires_at    DateTime
+  scopes        String[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // relations 
+  user User @relation(fields: [user_id], references: [id])
 }
