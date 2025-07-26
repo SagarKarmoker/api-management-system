@@ -182,4 +182,57 @@ apiRouter.get("/verify", async (req, res) => {
     });
 });
 
+apiRouter.post("/rotate/:key_id", async (req, res) => {
+    const { key_id } = req.params;
+    const { user_id } = req.query;
+    
+    if (!key_id || !user_id) {
+        return res.status(400).json({
+            status: "error",
+            message: "Missing key_id or user_id"
+        })
+    }
+
+    const apiKey = await prisma.api.findFirst({
+        where: {
+            id: key_id as string,
+            user_id: user_id as string
+        }
+    });
+
+    if (!apiKey) {
+        return res.status(400).json({
+            status: "error",
+            message: "API key not found"
+        })
+    }
+
+    const newKeySecret = randomBytes(32).toString('base64url');
+    const hashed_secret = await bcrypt.hash(newKeySecret, 10);
+    const newFullKey = `${key_id}.${newKeySecret}`;
+
+    const updatedApiKey = await prisma.api.update({
+        where: {
+            id: key_id as string,
+            user_id: user_id as string
+        },
+        data: {
+            hashed_secret,
+            full_key: newFullKey
+        }
+    });
+
+    if (!updatedApiKey) {
+        return res.status(400).json({
+            status: "error",
+            message: "Failed to rotate API key"
+        })
+    }
+    
+    res.status(200).json({
+        status: "success",
+        data: updatedApiKey || null
+    })
+})
+
 export default apiRouter;
