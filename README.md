@@ -22,7 +22,7 @@ A secure, modern API key management system built with TypeScript, Express.js, Pr
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/SagarKarmoker/typescript-backend-starter
+   git clone https://github.com/SagarKarmoker/api-management-system.git
    cd typescript-backend-starter
    ```
 
