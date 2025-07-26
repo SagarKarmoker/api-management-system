@@ -1,6 +1,6 @@
-# TypeScript Backend Starter
+# API Management System
 
-A modern TypeScript backend starter with Express.js, Prisma ORM, and PostgreSQL.
+A secure, modern API key management system built with TypeScript, Express.js, Prisma ORM, and PostgreSQL.
 
 ## Features
 
@@ -63,6 +63,65 @@ A modern TypeScript backend starter with Express.js, Prisma ORM, and PostgreSQL.
 - **Build for production**: `npm run build`
 - **Start production server**: `npm start`
 - **Run TypeScript directly**: `npm run start:dev`
+
+## API Key Management
+
+This project provides a secure API key system for authenticating requests.
+
+### 1. Create an API Key
+
+**Endpoint:** `POST /api/v1/api-keys`
+
+**Request Body:**
+```json
+{
+  "user_id": "<user_id>",
+  "scopes": ["read", "write"],
+  "expires_in_days": 30
+}
+```
+
+**Response:**
+- Returns the generated API key object, including the `full_key` (e.g., `key_xxxxxxxx.<secret>`)
+
+### 2. List API Keys
+
+**Endpoint:** `GET /api/v1/api-keys/keys?user_id=<user_id>`
+
+**Response:**
+- Returns a list of API keys for the user.
+
+### 3. Delete (Deactivate) an API Key
+
+**Endpoint:** `DELETE /api/v1/api-keys/keys/:key_id?user_id=<user_id>`
+
+**Response:**
+- Marks the API key as deleted (inactive).
+
+### 4. Verify an API Key
+
+**Endpoint:** `GET /api/v1/api-keys/verify`
+**Headers:**
+```
+api-x: <full_key>
+```
+
+**Response:**
+- `{ "status": "success", "message": "API key is valid" }` if valid
+- Error message if invalid, expired, or inactive
+
+### Using the API Key
+
+For protected endpoints, include the following header:
+```
+api-x: key_xxxxxxxx.<secret>
+```
+
+### Seeding and Setup
+- Run `npm run seed` to create a test user (see `src/lib/seed.ts`).
+- Use the user ID from your database when creating API keys.
+
+---
 
 ## Database
 

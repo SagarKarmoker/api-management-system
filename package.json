@@ -1,7 +1,7 @@
 {
-  "name": "typescript-backend-starter",
+  "name": "api-management-system",
   "version": "1.0.0",
-  "description": "",
+  "description": "A secure, modern API key management system built with TypeScript, Express, and Prisma.",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
